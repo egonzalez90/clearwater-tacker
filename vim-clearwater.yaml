@@ -1,0 +1,6 @@
+auth_url: http://192.168.100.10:35357/v3
+username: admin
+password: IwFUJzW4onFo9PPY4t4FUGyify9KSWLcqlssQlIc
+project_name: admin
+project_domain_name: Default
+user_domain_name:  Default

@@ -1,0 +1,61 @@
+tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
+
+description: Bono VNFD
+
+metadata:
+  template_name: bono-vfnd
+
+topology_template:
+  node_templates:
+    VDU1:
+      type: tosca.nodes.nfv.VDU.Tacker
+      capabilities:
+        nfv_compute:
+          properties:
+            num_cpus: 1
+            mem_size: 512 MB
+            disk_size: 0 GB
+      properties:
+        image: cirros
+        availability_zone: nova
+        mgmt_driver: noop
+        user_data_format: RAW
+        user_data: |
+          #!/bin/sh
+          echo 1 > /proc/sys/net/ipv4/ip_forward
+
+    CP11:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        management: true
+        order: 0
+        anti_spoofing_protection: false
+      requirements:
+        - virtualLink:
+            node: VL1
+        - virtualBinding:
+            node: VDU1
+
+    CP12:
+      type: tosca.nodes.nfv.CP.Tacker
+      properties:
+        management: true
+        order: 1
+        anti_spoofing_protection: false
+      requirements:
+        - virtualLink:
+            node: VL2
+        - virtualBinding:
+            node: VDU1
+
+    VL1:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: demo-net
+        vendor: Tacker
+
+    VL2:
+      type: tosca.nodes.nfv.VL
+      properties:
+        network_name: demo-net-2
+        vendor: Tacker
